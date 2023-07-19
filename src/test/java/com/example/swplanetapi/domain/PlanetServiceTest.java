@@ -4,8 +4,11 @@ import static com.example.swplanetapi.common.PlanetConstants.PLANET;
 import static com.example.swplanetapi.common.PlanetConstants.INVALID_PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -18,12 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
-
-import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 @ExtendWith(MockitoExtension.class)
 public class PlanetServiceTest {
@@ -107,5 +105,20 @@ public class PlanetServiceTest {
     when(planetRepository.findAll(query)).thenReturn(Collections.emptyList());
     List<Planet> sut = planetService.list(INVALID_PLANET.getTerrain(), INVALID_PLANET.getClimate());
     assertThat(sut).isEmpty();
+  }
+
+  @Test
+  public void removePlanet_withExistingId_doesNotThrowException() {
+    doNothing().when(planetRepository).deleteById(1L);
+    planetService.remove(1L);
+    verify(planetRepository, times(1)).deleteById(1L);
+  }
+
+  @Test
+  public void removePlanet_withNonExistingId_ThrowsException() {
+    doThrow(new RuntimeException()).when(planetRepository).deleteById(99L);
+
+    assertThatThrownBy(() -> planetService.remove(99L)).isInstanceOf(RuntimeException.class);
+
   }
 }

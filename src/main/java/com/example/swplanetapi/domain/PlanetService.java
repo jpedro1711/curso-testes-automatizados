@@ -29,4 +29,8 @@ public class PlanetService {
     Example<Planet> query = QueryBuilder.makeQuery(new Planet(terrain, climate));
     return planetRepository.findAll(query);
   }
+
+  public void remove(Long id) {
+    planetRepository.deleteById(id);
+  }
 }
