@@ -4,7 +4,9 @@ import static com.example.swplanetapi.common.PlanetConstants.PLANET;
 import static com.example.swplanetapi.common.PlanetConstants.INVALID_PLANET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -73,8 +75,8 @@ public class PlanetServiceTest {
 
   @Test
   public void findPlanet_withAnExistingName_ReturnsPlanet() {
-    when(planetRepository.findByName("name23")).thenReturn(Optional.of(PLANET));
-    Optional<Planet> sut = planetService.getByName("name23");
+    when(planetRepository.findByName(anyString())).thenReturn(Optional.of(PLANET));
+    Optional<Planet> sut = planetService.getByName("name");
     assertThat(sut).isNotEmpty();
     assertThat(sut).get().isEqualTo(PLANET);
   }
