@@ -9,11 +9,6 @@
   <a href="#-developing">Construir e Executar</a>
 </p>
 
-<p align="center">
-  <img alt="Licença" src="https://img.shields.io/static/v1?label=Licença&message=MIT&color=8257E5&labelColor=000000">
-  <img src="https://img.shields.io/static/v1?label=Curso na Udemy&message=Testes automatizados na prática com Spring Boot&color=8257E5&labelColor=000000" alt="Testes automatizados na prática com Spring Boot" />
-</p>
-
 <br>
 
 ## ✨ Technologies
@@ -41,8 +36,8 @@ O projeto requer um banco de dados Mysql, então é necessário criar uma base d
 ```
 $ sudo mysql
 
-CREATE USER 'root'@'%' IDENTIFIED BY 'mysqlRoot2023';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+CREATE USER 'user'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' WITH GRANT OPTION;
 
 exit
 
