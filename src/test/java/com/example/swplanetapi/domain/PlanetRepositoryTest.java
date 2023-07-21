@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 
 import java.util.List;
@@ -57,7 +60,7 @@ public class PlanetRepositoryTest {
     testEntityManager.detach(planet); // O entity manager deixa de monitorar o planeta
     planet.setId(null); // Zera o ID, quando tentar salvar o JPA vai saber que é pra salvar
     
-    assertThatThrownBy(() ->planetRepository.save(planet)).isInstanceOf(RuntimeException.class);;
+    assertThatThrownBy(() ->planetRepository.save(planet)).isInstanceOf(RuntimeException.class);
   }
 
   @Test
@@ -121,5 +124,10 @@ public class PlanetRepositoryTest {
 
     Planet removedPlanet = testEntityManager.find(Planet.class, planet.getId());
     assertThat(removedPlanet).isNull();
+  }
+
+  @Test
+  public void removeAnUnexistingPlanet_returnsException(){
+    assertDoesNotThrow(() -> planetRepository.deleteById(999L));
   }
 }

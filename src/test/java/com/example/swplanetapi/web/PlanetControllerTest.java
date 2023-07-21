@@ -134,4 +134,13 @@ public class PlanetControllerTest {
     mockMvc.perform(delete("/planets/1"))
       .andExpect(status().isNoContent());
   }
+
+  @Test
+  public void removePlanet_NonExistentId_ReturnsNotFound() throws Exception {
+    // Simulate a scenario where the id does not exist and the service throws an exception
+    doThrow(new EmptyResultDataAccessException(1)).when(planetService).remove(999L);
+
+    mockMvc.perform(delete("/planets/999"))
+      .andExpect(status().isNotFound());
+  }
 }

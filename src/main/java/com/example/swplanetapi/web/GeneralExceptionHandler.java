@@ -30,7 +30,7 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler{
   }
 
   @ExceptionHandler(EmptyResultDataAccessException.class)
-  private ResponseEntity<Object> handleBadRequest(DataIntegrityViolationException ex) {
+  private ResponseEntity<Object> handleBadRequest(EmptyResultDataAccessException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
 }
