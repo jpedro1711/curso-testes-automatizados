@@ -1,6 +1,5 @@
 package com.example.swplanetapi.domain;
 import static com.example.swplanetapi.common.PlanetConstants.PLANET;
-import static com.example.swplanetapi.common.PlanetConstants.INVALID_PLANET;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
