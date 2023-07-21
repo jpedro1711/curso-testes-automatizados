@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -110,5 +111,15 @@ public class PlanetRepositoryTest {
     Example<Planet> query = QueryBuilder.makeQuery(new Planet());
     List<Planet> response = planetRepository.findAll(query);
     assertThat(response).isEmpty();
+  }
+
+  @Test
+  public void removeAnExistingPlanet_returnsOk(){
+    Planet planet = testEntityManager.persistFlushFind(PLANET);
+
+    planetRepository.deleteById(planet.getId());
+
+    Planet removedPlanet = testEntityManager.find(Planet.class, planet.getId());
+    assertThat(removedPlanet).isNull();
   }
 }
