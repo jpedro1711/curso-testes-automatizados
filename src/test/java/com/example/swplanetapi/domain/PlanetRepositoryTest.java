@@ -1,10 +1,14 @@
 package com.example.swplanetapi.domain;
 import static com.example.swplanetapi.common.PlanetConstants.PLANET;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.util.Optional;
+
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
@@ -16,6 +20,11 @@ public class PlanetRepositoryTest {
 
   @Autowired
   private TestEntityManager testEntityManager;
+
+  @AfterEach
+  public void AfterEach() {
+    PLANET.setId(null);
+  }
 
   @Test
   public void createPlanetWithValidData_ReturnsPlantet() {
@@ -43,5 +52,21 @@ public class PlanetRepositoryTest {
     planet.setId(null); // Zera o ID, quando tentar salvar o JPA vai saber que é pra salvar
     
     assertThatThrownBy(() ->planetRepository.save(planet)).isInstanceOf(RuntimeException.class);;
+  }
+
+  @Test
+  public void getPlanet_ByExistingId_ReturnsPlanet(){
+    Planet planet = testEntityManager.persistFlushFind(PLANET);
+    Optional<Planet> planetOpt = planetRepository.findById(planet.getId());
+    assertThat(planetOpt).isNotEmpty();
+    assertThat(planetOpt.get()).isEqualTo(planet);
+  }
+
+  @Test
+  public void getPlanet_ByUnexistingId_ReturnsEmpty(){
+    Planet planet = new Planet("name", "climate", "terrain");
+    planet.setId(999L);
+    Planet sut = testEntityManager.find(Planet.class, planet.getId()); // Buscar o planeta criado
+    assertThat(sut).isNull();
   }
 }
