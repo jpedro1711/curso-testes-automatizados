@@ -4,9 +4,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static com.example.swplanetapi.common.PlanetConstants.PLANET;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -51,5 +53,14 @@ public class PlanetControllerTest {
     mockMvc.perform(post("/planets").content(objectMapper.writeValueAsString(invalidPlanet))
       .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isUnprocessableEntity());
+  }
+
+  @Test
+  public void createPlanet_withExistingName_ReturnsConflict() throws Exception{
+    when(planetService.create(PLANET)).thenThrow(DataIntegrityViolationException.class);
+    mockMvc.perform(post("/planets").content(objectMapper
+      .writeValueAsString(PLANET))
+      .contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isConflict());
   }
 }
